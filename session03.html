@@ -1,0 +1,1415 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Session 3: Accessible forms | Developing for web accessibility</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://intopia.github.io/training-assets/dist/reveal.css">
+    <link rel="stylesheet" href="https://intopia.github.io/training-assets/dist/theme/intopia.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'https://intopia.github.io/training-assets/dist/theme/pdf.css' : 'https://intopia.github.io/training-assets/dist/theme/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <div class="menu">
+          <a href="index.html">Home<span class="hidden"> - list of all slide decks</span></a> | <a href="#/">Start<span class="hidden"> of slide deck</span></a>
+        </div>
+
+        <section data-background="#d3420d">
+          <h1>Session 3</h1>
+          <span class="h5">Accessible forms</span>
+        </section>
+
+        <section data-background="#fff">
+          <div class="instructions">
+            <h3 class="instructions-heading">Slide instructions</h3>
+            <p><kbd>SPACEBAR</kbd> to <b>move forward</b> through slides.</p>
+            <p><kbd>SHIFT</kbd> &amp; <kbd>SPACEBAR</kbd> to <b>move backwards</b> through slides.</p>
+            <p><kbd>LEFT ARROW</kbd> &amp; <kbd>RIGHT ARROW</kbd> to <b>move through sections</b>.</p>
+            <p><kbd>ESC</kbd> to <b>see overview</b> and <kbd>ESC</kbd> again to exit.</p>
+            <p><kbd>F</kbd> to <b>enter presentation mode</b> and <kbd>ESC</kbd> to exit.</p>
+          </div>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-introduction">
+          <section data-background="#15828E">
+            <h2>Introduction</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>Forms are important because it's how our site visitors can <b>interact with our products</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>They have the same access requirements as content and structure: all key form elements must be <b>identifiable in the Accessibility API</b>. </p>
+          </section>
+
+          <section data-background="#fff">
+            <p>But they have <b>additional requirements</b> which are there to help with the interactions that are possible in a form. </p>
+          </section>
+
+          <section data-background="#fff">
+            <p>People need to know if form controls are <b>required or optional</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>They need to know if there are any <b>instructions</b> related to each form control.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>And they need to know when form controls are in <b>either success or error states</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>Today we'll first learn how to create <b>semantic, valid forms</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>Then we'll learn how to <b>add instructions and requirements</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>In the following session we'll cover what happens <b>after the user clicks Submit on the form</b>.</p>
+          </section>
+       </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="ex-an-html-element-quiz">
+          <section data-background="#d3420d">
+            <h2>Exercise: An HTML element quiz</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>We're going to do a <b>quick quiz consisting of two questions</b>. Just type your answers into the chat window.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>And remember, there is <b>no judgement here</b>. It’s just a quick warm-up exercise!</p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Question 1:</h4>
+            <p>List as many of the HTML <code>&lt;input&gt;</code> types as you can.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- Here are 2 examples of all 22 types --&gt;</span>
+&lt;input <span class="codeHighlight">type="text"</span>&gt;
+&lt;input <span class="codeHighlight">type="radio"</span>&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>Ready for the <b>full list</b>?</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">01</span> &lt;input <span class="codeHighlight">type="button"</span>&gt;
+<span class="codeComment">02</span> &lt;input <span class="codeHighlight">type="checkbox"</span>&gt;
+<span class="codeComment">03</span> &lt;input <span class="codeHighlight">type="file"</span>&gt;
+<span class="codeComment">04</span> &lt;input <span class="codeHighlight">type="hidden"</span>&gt;
+<span class="codeComment">05</span> &lt;input <span class="codeHighlight">type="image"</span>&gt;
+<span class="codeComment">06</span> &lt;input <span class="codeHighlight">type="password"</span>&gt;
+<span class="codeComment">07</span> &lt;input <span class="codeHighlight">type="radio"</span>&gt;
+<span class="codeComment">08</span> &lt;input <span class="codeHighlight">type="reset"</span>&gt;
+<span class="codeComment">09</span> &lt;input <span class="codeHighlight">type="submit"</span>&gt;
+<span class="codeComment">10</span> &lt;input <span class="codeHighlight">type="text"</span>&gt;
+<span class="codeComment">11</span> &lt;input <span class="codeHighlight">type="color"</span>&gt; (HTML5)
+<span class="codeComment">12</span> &lt;input <span class="codeHighlight">type="date"</span>&gt; (HTML5)</code></pre>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">13</span> &lt;input <span class="codeHighlight">type="datetime-local"</span>&gt; (HTML5)
+<span class="codeComment">14</span> &lt;input <span class="codeHighlight">type="email"</span>&gt; (HTML5)
+<span class="codeComment">15</span> &lt;input <span class="codeHighlight">type="month"</span>&gt; (HTML5)
+<span class="codeComment">16</span> &lt;input <span class="codeHighlight">type="number"</span>&gt; (HTML5)
+<span class="codeComment">17</span> &lt;input <span class="codeHighlight">type="range"</span>&gt; (HTML5)
+<span class="codeComment">18</span> &lt;input <span class="codeHighlight">type="search"</span>&gt; (HTML5)
+<span class="codeComment">19</span> &lt;input <span class="codeHighlight">type="tel"</span>&gt; (HTML5)
+<span class="codeComment">20</span> &lt;input <span class="codeHighlight">type="time"</span>&gt; (HTML5)
+<span class="codeComment">21</span> &lt;input <span class="codeHighlight">type="url"</span>&gt; (HTML5)
+<span class="codeComment">22</span> &lt;input <span class="codeHighlight">type="week"</span>&gt; (HTML5)
+<s>&lt;input type="datetime"&gt;</s> (Deprecated)</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Question 2:</h4>
+            <p>List as many form-related HTML elements as you can.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- 2 examples of all 14 form elements --&gt;</span>
+&lt;input&gt;
+&lt;label&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>Ready for the <b>full list</b>?</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">01</span> &lt;button&gt;
+<span class="codeComment">02</span> &lt;fieldset&gt;
+<span class="codeComment">03</span> &lt;form&gt;
+<span class="codeComment">04</span> &lt;input&gt;
+<span class="codeComment">05</span> &lt;label&gt;
+<span class="codeComment">06</span> &lt;legend&gt;
+<span class="codeComment">07</span> &lt;optgroup&gt;
+<span class="codeComment">08</span> &lt;option&gt;
+<span class="codeComment">09</span> &lt;select&gt;
+<span class="codeComment">10</span> &lt;textarea&gt;</code></pre>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">11</span> &lt;datalist&gt; (HTML5)
+<span class="codeComment">12</span> &lt;meter&gt; (HTML5)
+<span class="codeComment">13</span> &lt;output&gt; (HTML5)
+<span class="codeComment">14</span> &lt;progress&gt; (HTML5)
+<s>&lt;keygen&gt;</s> (Deprecated)</code></pre>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-the-label-element">
+          <section data-background="#15828E">
+            <h2>The <code class="white">&lt;label&gt;</code> element</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>&lt;label&gt;</code> element can be used to provide <b>a visible text label</b> for some specific HTML elements.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>There are only <b>five elements</b> that require a <code>&lt;label&gt;</code> element in order to provide a visible text label:</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- Some INPUT elements --&gt;</span>
+&lt;label for="aaa"&gt;Label text&lt;/label&gt;
+<span class="codeHighlight">&lt;input id="aaa" type="text"&gt;</span>
+
+<span class="codeHighlight">&lt;input id="bbb" type="radio"&gt;</span>
+&lt;label for="bbb"&gt;Yes&lt;/label&gt;
+
+<span class="codeHighlight">&lt;input id="ccc" type="checkbox"&gt;</span>
+&lt;label for="ccc"&gt;Subscribe&lt;/label&gt;
+
+</code></pre>
+          <aside class="notes">This includes inputs of any type: checkbox, radio, etc.</aside>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- SELECT --&gt;</span>
+&lt;label for="bbb"&gt;Label text&lt;/label&gt;
+<span class="codeHighlight">&lt;select id="bbb"&gt;&lt;/select&gt;</span></code></pre>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- TEXTAREA --&gt;</span>
+&lt;label for="ccc"&gt;Label text&lt;/label&gt;
+<span class="codeHighlight">&lt;textarea id="ccc"&gt;&lt;/textarea&gt;</span></code></pre>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- METER --&gt;</span>
+&lt;label for="ddd"&gt;Label text&lt;/label&gt;
+<span class="codeHighlight">&lt;meter id="ddd"&gt;&lt;/meter&gt;</span></code></pre>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- PROGRESS --&gt;</span>
+&lt;label for="eee"&gt;Label text&lt;/label&gt;
+<span class="codeHighlight">&lt;progress id="eee"&gt;&lt;/progress&gt;</span></code></pre>
+          </section>
+
+          <section data-background="#222">
+            <h3>Misuse of the <code class="white">&lt;label&gt;</code></h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>&lt;label&gt;</code> element <b>should never be applied</b> to other non-form related HTML elements.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- Do not do this --&gt;</span>
+<s>&lt;label&gt;Choose a state&lt;/label&gt;</s>
+&lt;div&gt;New South Wales&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>&lt;label&gt;</code> element <b>should never be used as a replacement</b> for a <code>&lt;legend&gt;</code>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- Do not do this --&gt;</span>
+<s>&lt;label&gt;Overall question&lt;/label&gt;</s>
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;input type="radio" id="one" name="yesno"&gt;
+    &lt;label for="one"&gt;Yes&lt;/label&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;input type="radio" id="two" name="yesno"&gt;
+    &lt;label for="two"&gt;No&lt;/label&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>&lt;label&gt;</code> element <b>should never be used as a replacement</b> for heading element.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- Do not do this --&gt;</span>
+<s>&lt;label&gt;Heading content&lt;/label&gt;</s>
+&lt;p&gt;Paragraph content&lt;/p&gt;
+&lt;p&gt;Paragraph content&lt;/p&gt;</code></pre>
+          </section>
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-programmatically-associated-label-elements">
+          <section data-background="#15828E">
+            <h2>Programmatically associated <code class="white">&lt;label&gt;</code> elements</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>&lt;label&gt;</code> element can also be used to <b>provide an accessible name</b> to form controls.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>An accessible name is only generated if the <code>&lt;label&gt;</code> and form control are <b>programmatically associated</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Step 1:</h4>
+            <p>Apply a <code>for</code> attribute and a value to the <code>&lt;label&gt;</code>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;label <span class="codeHighlight">for="name"</span>&gt;Full name&lt;/label&gt;
+&lt;input type="text"&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Step 2:</h4>
+            <p>Apply a matching <code>id</code> value to the form control.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;label for="name"&gt;Full name&lt;/label&gt;
+&lt;input type="text" <span class="codeHighlight">id="name"</span>&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>The form control will now have an <b>programmatically associated</b> <code>&lt;label&gt;</code>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>This will generate an &ldquo;accessible name&rdquo; <b>in the accessibility tree</b>.</p>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>Wrapped labels</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>It is acceptable to wrap the <code>&lt;label&gt;</code> <b>around the visible text label and form control</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>However, the <code>&lt;label&gt;</code> and form control must still be <b>programmatically associated</b> via matching <code>for</code> and <code>id</code> values.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;label <span class="codeHighlight">for="name"</span>&gt;
+  Full name
+  &lt;input type="text" <span class="codeHighlight">id="name"</span>&gt;
+&lt;/label&gt;
+</code></pre>
+          </section>
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="ex-programmatically-associating-labels-and-form-controls">
+          <section data-background="#d3420d">
+            <h2>Exercise: Programmatically associating labels and form controls</h2>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing the exercise:</h4>
+            <p><a href="https://codepen.io/intopia/pen/RwxQdEx" target="_blank">DEVELOPER EXERCISE: Programmatically associating labels and form controls</a>.</p>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-visible-text-label-order">
+          <section data-background="#15828E">
+            <h2>Visible text label order</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>Visible text labels for most fields should be positioned <b>immediately before the form control</b>, either to the left or above it.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- Visible text label before input --&gt;</span>
+&lt;label for="name"&gt;<span class="codeHighlight">Full name</span>&lt;/label&gt;
+&lt;input type="text" id="name"&gt;</code></pre>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- Visible text label before textarea --&gt;</span>
+&lt;label for="comment"&gt;<span class="codeHighlight">Comment</span>&lt;/label&gt;
+&lt;textarea id="comment"&gt;&lt;/textarea&gt;</code></pre>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- Visible text label before select --&gt;</span>
+&lt;label for="fruit"&gt;<span class="codeHighlight">Choose a fruit</span>&lt;/label&gt;
+&lt;select id="fruit"&gt;&lt;/select&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>Visible text labels for radio buttons and checkboxes should be positioned <b>immediately after the field</b>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- Visible text label after radio button --&gt;</span>
+&lt;input type="radio" id="yes"&gt;
+&lt;label for="yes"&gt;<span class="codeHighlight">Yes</span>&lt;/label&gt;</code></pre>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- Visible text label after checkbox --&gt;</span>
+&lt;input type="checkbox" id="subscribe"&gt;
+&lt;label for="subscribe"&gt;<span class="codeHighlight">Subscribe</span>&lt;/label&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>These positions are defined because they are <a href="https://www.w3.org/WAI/WCAG21/Techniques/general/G162.html" target="_blank">the usual (and therefore most predictable) position</a> for visible text labels in relation to form controls.</p>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>What about when the <code class="white">&lt;label&gt;</code> is wrapped around the form control?</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>In these cases, the visible text label content <b>should still be positioned before</b> the form control.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;label for="name"&gt;
+  <span class="codeHighlight">Full name</span>
+  &lt;input type="text" id="name"&gt;
+&lt;/label&gt;</code></pre>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;label for="comment"&gt;
+  <span class="codeHighlight">Comment</span>
+  &lt;textarea id="comment"&gt;&lt;/textarea&gt;
+&lt;/label&gt;</code></pre>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;label for="fruit"&gt;
+  <span class="codeHighlight">Choose a fruit</span>
+  &lt;select id="fruit"&gt;&lt;/select&gt;
+&lt;/label&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>For radio buttons and checkboxes, the visible text label <b>should still be positioned after</b> the form control.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;label for="yes"&gt;
+  &lt;input type="radio" id="yes"&gt;
+  <span class="codeHighlight">Yes</span>
+&lt;/label&gt;</code></pre>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;label for="subscribe"&gt;
+  &lt;input type="checkbox" id="subscribe"&gt;
+  <span class="codeHighlight">Subscribe</span>
+&lt;/label&gt;</code></pre>
+          </section>
+
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="ex-fixing-the-label-order">
+          <section data-background="#d3420d">
+            <h2>Exercise: Fixing the label order</h2>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing the exercise:</h4>
+            <p><a href="https://codepen.io/intopia/pen/NWXyJee" target="_blank">DEVELOPER EXERCISE: Fixing the label order</a>.</p>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-fieldset-and-legend">
+          <section data-background="#15828E">
+            <h2><code class="white">&lt;fieldset&gt;</code> and <code class="white">&lt;legend&gt;</code></h2>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>The <code class="white">&lt;fieldset&gt;</code></h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>&lt;fieldset&gt;</code> element represents a set of form controls <b>grouped under a common name</b>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeHighlight">&lt;fieldset&gt;</span>
+  &lt;legend&gt;Contact details&lt;/legend&gt;
+  ...
+<span class="codeHighlight">&lt;/fieldset&gt;</span></code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>&lt;fieldset&gt;</code> element allows us to <b>visually and semantically group related form questions</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-002.png" alt="Fieldsets around form sections">
+          </section>
+
+          <section data-background="#fff">
+            <p>We're allowed to <b>nest more than one</b> <code>&lt;fieldset&gt;</code> element inside another <code>&lt;fieldset&gt;</code> element.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;fieldset&gt;
+  &lt;legend&gt;Contact details&lt;/legend&gt;
+  ...
+  <span class="codeHighlight">&lt;fieldset&gt;</span>
+    &lt;legend&gt;Additional info&lt;/legend&gt;
+    ...
+  <span class="codeHighlight">&lt;/fieldset&gt;</span>
+&lt;/fieldset&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>However, while this is considered valid markup, screen readers <b>often struggle to describe nested</b> <code>&lt;fieldset&gt;</code> elements effectively.</p>
+          </section>
+
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>The <code class="white">&lt;legend&gt;</code></h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>&lt;legend&gt;</code> element <b>represents a caption</b> for the <code>&lt;fieldset&gt;</code> element.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;fieldset&gt;
+  <span class="codeHighlight">&lt;legend&gt;Contact details&lt;/legend&gt;</span>
+  ...
+&lt;/fieldset&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-003.png" alt="Legends associated with fieldsets">
+          </section>
+
+          <section data-background="#fff">
+            <p>There <b>should be</b> a single <code>&lt;legend&gt;</code> inside each <code>&lt;fieldset&gt;</code> element.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>If present, the <code>&lt;legend&gt;</code> element <b>must be</b> the first child of any <code>&lt;fieldset&gt;</code> element.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- LEGEND must be first child --&gt;</span>
+&lt;fieldset&gt;
+  &lt;p&gt;Some other content&lt;/p&gt;
+  <s>&lt;legend&gt;Incorrect legend&lt;/legend&gt;</s>
+&lt;/fieldset&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>&lt;legend&gt;</code> element <b>must not be</b> used outside of <code>&lt;fieldset&gt;</code> element.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeComment">&lt;!-- LEGEND should not be used outside FIELDSET --&gt;</span>
+&lt;p&gt;Some other content&lt;/p&gt;
+<s>&lt;legend&gt;Legend used outside of FIELDSET&lt;/legend&gt;</s>
+&lt;p&gt;Some other content&lt;/p&gt;
+
+</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>As of HTML5, <code>&lt;legend&gt;</code> elements are <b>allowed to contain heading elements</b>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;fieldset&gt;
+  &lt;legend&gt;<span class="codeHighlight">&lt;h3&gt;Contact details&lt;/h3&gt;</span>&lt;/legend&gt;
+  ...
+&lt;/fieldset&gt;</code></pre>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>Why are the <code class="white">&lt;fieldset&gt;</code> and <code class="white">&lt;legend&gt;</code> elements important for accessibility?</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>When focus moves to the first form control inside a <code>&lt;fieldset&gt;</code>, <b>screen readers will announce the</b> <code>&lt;legend&gt;</code> content along with the label content.</p>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-022.png" alt="Radio group - first radio in focus also announces legend">
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-023.png" alt="Radio group - second radio in focus">
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-024.png" alt="Radio group - third radio in focus">
+          </section>
+
+          <section data-background="#fff">
+            <p>The same happens if the user <b>moves back up the form</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-025.png" alt="Radio group - third radio in focus also announces legend">
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-026.png" alt="Radio group - second radio in focus">
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-027.png" alt="Radio group - first radio in focus">
+          </section>
+
+          <section data-background="#fff">
+            <p>Let’s look at how the <code>&lt;legend&gt;</code> is <b>announced in various screen reader combinations</b> when focus is placed on the <code>&lt;input&gt;</code> element.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;fieldset&gt;
+  <span class="codeHighlight">&lt;legend&gt;Contact details&lt;/legend&gt;</span>
+  &lt;div&gt;
+    &lt;label for="name"&gt;Full name&lt;/label&gt;
+    &lt;input type="text" id="name"&gt;
+  &lt;/div&gt;
+&lt;/fieldset&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <h4>OSX / VoiceOver</h4>
+            <ul class="font-sm">
+              <li><b>Chrome</b>: Full name. Edit text. <b class="success">Contact details</b>. Group.</li>
+              <li><b>Firefox</b>: Full name. Edit text. <b class="success">Contact details</b>. Group.</li>
+              <li><b>Safari</b>: Full name. Edit text. <b class="success">Contact details</b>. Contact details. Group.</li>
+            </ul>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Windows / NVDA</h4>
+            <ul class="font-sm">
+              <li><b>Chrome</b>: <b class="success">Contact details</b>. Grouping. Full name. Edit. Blank.</li>
+              <li><b>Firefox</b>: <b class="success">Contact details</b>. Grouping. Full name. Edit. Has autocomplete. Blank.</li>
+              <li><b>Edge</b>: <b class="success">Contact details</b>. Grouping. Full name. Edit. Blank.</li>
+            </ul>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Windows / JAWS</h4>
+            <ul class="font-sm">
+              <li><b>Chrome</b>: <b class="success">Contact details</b>. Group. Full name. Edit. Type in text.</li>
+              <li><b>Firefox</b>: <b class="success">Contact details</b>. Full name. Edit. Type in text.</li>
+              <li><b>Edge</b>: <b class="success">Contact details</b>. Group. Full name. Edit. Type in text.</li>
+            </ul>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>Radio and checkbox groups</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>Groups of related radio buttons are called <b>&ldquo;radio groups&rdquo;</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>All radio buttons must have <b>matching</b> <code>name</code> <b>values</b> in order for a single radio button to be chosen at a time.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;input id="weekly" type="radio" <span class="codeHighlight">name="sub"</span>&gt;
+&lt;label for="weekly"&gt;Weekly&lt;/label&gt;
+
+&lt;input id="monthly" type="radio" <span class="codeHighlight">name="sub"</span>&gt;
+&lt;label for="monthly"&gt;Monthly&lt;/label&gt;
+
+&lt;input id="yearly" type="radio" <span class="codeHighlight">name="sub"</span>&gt;
+&lt;label for="yearly"&gt;Yearly&lt;/label&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>&lt;fieldset&gt;</code> and <code>&lt;legend&gt;</code> elements <b>should be used for radio groups</b> in order to provide an overall name for the group.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeHighlight">&lt;fieldset&gt;
+  &lt;legend&gt;Subscription type&lt;/legend&gt;</span>
+  &lt;input id="weekly" type="radio" name="sub"&gt;
+  &lt;label for="weekly"&gt;Weekly&lt;/label&gt;
+
+  &lt;input id="monthly" type="radio" name="sub"&gt;
+  &lt;label for="monthly"&gt;Monthly&lt;/label&gt;
+
+  &lt;input id="yearly" type="radio" name="sub"&gt;
+  &lt;label for="yearly"&gt;Yearly&lt;/label&gt;
+<span class="codeHighlight">&lt;/fieldset&gt;</span></code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-004.png" alt="Radio group fieldset">
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-005.png" alt="Radio group legend">
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-006.png" alt="Radio group radio buttons">
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-007.png" alt="Radio group labels">
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>&lt;fieldset&gt;</code> and <code>&lt;legend&gt;</code> elements <b>should be used for checkbox groups</b> as well.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeHighlight">&lt;fieldset&gt;
+  &lt;legend&gt;Check all your favourite fruit&lt;/legend&gt;</span>
+  &lt;input id="apples" type="radio"&gt;
+  &lt;label for="apples"&gt;Apples&lt;/label&gt;
+
+  &lt;input id="bananas" type="radio"&gt;
+  &lt;label for="bananas"&gt;Bananas&lt;/label&gt;
+
+  &lt;input id="pears" type="radio"&gt;
+  &lt;label for="pears"&gt;Pears&lt;/label&gt;
+<span class="codeHighlight">&lt;/fieldset&gt;</span></code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-008.png" alt="Checkbox group fieldset">
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-009.png" alt="Checkbox group legend">
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-010.png" alt="Checkbox group checkboxes">
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-011.png" alt="Checkbox group labels">
+          </section>
+
+<!--–––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––-->
+
+          <section data-background="#222">
+            <h3>Lists for radio and checkbox groups</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>Individual radio buttons and their associated <code>&lt;label&gt;</code> elements can be <b>wrapped in</b> <code>&lt;div&gt;</code> <b>elements</b>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;fieldset&gt;
+  &lt;legend&gt;Do you like boats?&lt;/legend&gt;
+  <span class="codeHighlight">&lt;div&gt;</span>
+    &lt;input type="radio" id="boats-y" name="boats"&gt;
+    &lt;label for="boats-y"&gt;Yes&lt;/label&gt;
+  <span class="codeHighlight">&lt;/div&gt;
+  &lt;div&gt;</span>
+    &lt;input type="radio" id="boats-n" name="boats"&gt;
+    &lt;label for="boats-n"&gt;No&lt;/label&gt;
+  <span class="codeHighlight">&lt;/div&gt;</span>
+&lt;/fieldset&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>They can also be <b>placed inside a list</b>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;fieldset&gt;
+  &lt;legend&gt;Do you like boats?&lt;/legend&gt;
+  <span class="codeHighlight">&lt;ul&gt;
+    &lt;li&gt;</span>
+      &lt;input type="radio" id="boats-y" name="boats"&gt;
+      &lt;label for="boats-y"&gt;Yes&lt;/label&gt;
+    <span class="codeHighlight">&lt;/li&gt;
+    &lt;li&gt;</span>
+      &lt;input type="radio" id="boats-n" name="boats"&gt;
+      &lt;label for="boats-n"&gt;No&lt;/label&gt;
+    <span class="codeHighlight">&lt;/li&gt;
+  &lt;/ul&gt;</span>
+&lt;/fieldset&gt;</code></pre>
+          </section>
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="ex-making-a-radio-group-accessible">
+          <section data-background="#d3420d">
+            <h2>Exercise: Making a radio group accessible</h2>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing the exercise:</h4>
+            <p><a href="https://codepen.io/intopia/pen/eYyVXxN" target="_blank">DEVELOPER EXERCISE: Making a radio group accessible</a>.</p>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-form-field-instructions">
+          <section data-background="#15828E">
+            <h2>Form field instructions</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>Form field instructions are additional information that can be <b>added to a form field to provide more context for users</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>These instructions can also be used to <b>specify the exact input or formatting</b> required for each field.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>Form field instructions must be <b>programatically associated with each form field</b>, so that this information is announced to assistive technologies.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>The best way to <b>programatically associate instructions</b> with their form fields is via matching <code>aria-describedby</code> and <code>id</code> attributes.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div&gt;
+  &lt;label for="a1"&gt;Name&lt;/label&gt;
+  &lt;span <span class="codeHighlight">id="a2"</span>&gt;Include full name&lt;/span&gt;
+  &lt;input <span class="codeHighlight">aria-describedby="a2"</span> id="a1" type="text"&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>Instructions associated with fieldsets</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>In the case of <code>&lt;fieldset&gt;</code> elements, there may be occasions where the entire <code>&lt;fieldset&gt;</code> group <b>needs additional instructions</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>Ideally, the instructions would be programmatically associated <b>directly with the</b> <code>&lt;fieldset&gt;</code> <b>element</b> using <code>aria-describedby</code>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;fieldset <span class="codeHighlight">aria-describedby="a1"</span>&gt;
+  &lt;legend&gt;Do you like boats?&lt;/legend&gt;
+  &lt;p <span class="codeHighlight">id="a1"</span>&gt;Choose at least one option&lt;/p&gt;
+  &lt;div&gt;
+    &lt;input type="radio" id="b1" name="b"&gt;
+    &lt;label for="b1"&gt;Yes&lt;/label&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;input type="radio" id="b2" name="b"&gt;
+    &lt;label for="b2"&gt;No&lt;/label&gt;
+  &lt;/div&gt;
+&lt;/fieldset&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>However, this method has <a href="https://russmaxdesign.github.io/accessible-forms/support-fieldset-errors.html" target="_blank">very poor support in VoiceOver</a>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>An alternate, and slightly more robust, method would be to programmatically associate the instructions <b>with each form control</b> using <code>aria-describedby</code>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;fieldset&gt;
+  &lt;legend&gt;Do you like boats?&lt;/legend&gt;
+  &lt;p <span class="codeHighlight">id="a1"</span>&gt;Choose at least one option&lt;/p&gt;
+  &lt;div&gt;
+    &lt;input <span class="codeHighlight">aria-describedby="a1"</span> type="radio" id="b1" name="b"&gt;
+    &lt;label for="b1"&gt;Yes&lt;/label&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;input <span class="codeHighlight">aria-describedby="a1"</span> type="radio" id="b2" name="b"&gt;
+    &lt;label for="b2"&gt;No&lt;/label&gt;
+  &lt;/div&gt;
+&lt;/fieldset&gt;</code></pre>
+          </section>
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="ex-adding-form-field-instructions">
+          <section data-background="#d3420d">
+            <h2>Exercise: Adding form field instructions</h2>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing the exercise:</h4>
+            <p><a href="https://codepen.io/intopia/pen/jOYZJRo" target="_blank">DEVELOPER EXERCISE: Adding form field instructions</a>.</p>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-required-fields">
+          <section data-background="#15828E">
+            <h2>Required fields</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>All &ldquo;required&rdquo; fields within a form <b>must be programmatically identifiable</b>. This is achieved by applying the <code>required</code> attribute.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;label for="name"&gt;
+  Full name
+&lt;/label&gt;
+&lt;input type="text" id="name" <span class="codeHighlight">required</span>&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>This means that for screen readers, <b>the &ldquo;required&rdquo; state will be announced</b>.</p>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>Visually flagging required fields</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>Any required fields <b>must also have some sort of visual indicator</b>, so that sighted users know that these fields must be filled in.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <b>visual indication method</b> must be:</p>
+            <ul>
+              <li>Intuitive for users.</li>
+              <li>More than a colour difference.</li>
+            </ul>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-028.png" alt="Colour alone used to define required field">
+          </section>
+
+          <section data-background="#fff">
+            <p>One simple solution is to add the text &ldquo;(Required)&rdquo; to the <code>&lt;label&gt;</code> element content. This additional content can also be <b>styled in a colour to make it stand out</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-029.png" alt="Colour and text used to define required field">
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;label for="name"&gt;
+  Full name
+  <span class="codeHighlight">&lt;span&gt;(Required)&lt;/span&gt;</span>
+&lt;/label&gt;
+&lt;input type="text" id="name" required&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>This &ldquo;(Required)&rdquo; text should be set with <code>aria-hidden="true"</code>, to <b>hide this additional information</b> from screen readers.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>Screen readers are informed that the field is required via the <code>required</code> attribute, <b>so they don’t need to hear this message</b> from the <code>&lt;label&gt;</code> as well.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;label for="name"&gt;
+  Full name
+  &lt;span <span class="codeHighlight">aria-hidden="true"</span>&gt;(Required)&lt;/span&gt;
+&lt;/label&gt;
+&lt;input type="text" id="name" required&gt;</code></pre>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>The asterisk symbol</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>In the old days, some authors <b>used the asterisk symbol</b> to visually define required fields.</p>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-030.png" alt="Required indicator">
+          </section>
+
+          <section data-background="#fff">
+            <p>However, this method <b>presents a range of accessibility issues</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>1. Users often <b>do not understand the meaning of the asterisk</b>, so a key would need to be presented at the top of the form.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>2. The asterisk is also <b>an extremely small indicator</b>, and can be missed by users with poor eye-sight.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>3. The asterisk symbol is often <b>ignored or mis-announced by screen readers</b>.</p>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>What about when all fields are required?</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>If <b>all fields in the form are required</b>, users can be presented with a message along the lines of:</p>
+            <p><i>&ldquo;All fields in the form below are required&rdquo;</i></p>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-031.png" alt="Required indicator">
+          </section>
+
+          <section data-background="#fff">
+            <p>This message <b>must be placed before the form</b> so that assistive technology users can read this information before entering the form.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>Using this method, individual form fields <b>do not have to be visually identified</b> as &ldquo;required&rdquo;.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>However, if this method is used, <b>all required fields</b> must still include the required attribute.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;label for="name"&gt;
+  Full name
+&lt;/label&gt;
+&lt;input type="text" id="name" <span class="codeHighlight">required</span>&gt;</code></pre>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>What about when there's a mix of required and optional?</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>Only required fields <b>need to be flagged to users</b>. So, there are two options:</p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Option 1:</h4>
+            <p>Visually flag all required fields, even if most of the fields in the form are required.</p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Option 2:</h4>
+            <p>Visually flag just the optional fields. A message would need to be presented at before the form, along the lines of:</p>
+            <p><i>&ldquo;All fields in the form below are required unless marked OPTIONAL&rdquo;.</i></p>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-032.png" alt="Message">
+          </section>
+
+          <section data-background="#fff">
+            <p>Then all optional fields <b>would need some sort of visual flag</b>:</p>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-033.png" alt="Message">
+          </section>
+
+          <section data-background="#fff">
+            <p>If this method is used, <b>all required fields must still include</b> the <code>required</code> attribute.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;label for="name"&gt;
+  Full name
+&lt;/label&gt;
+&lt;input type="text" id="name" <span class="codeHighlight">required</span>&gt;</code></pre>
+          </section>
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="ex-adding-required-features">
+          <section data-background="#d3420d">
+            <h2>Exercise: Adding required features</h2>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing the exercise:</h4>
+            <p><a href="https://codepen.io/intopia/pen/dyJdrLz" target="_blank">DEVELOPER EXERCISE: Adding required features</a>.</p>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-the-autocomplete-attribute">
+          <section data-background="#15828E">
+            <h2>The <code class="white">autocomplete</code> attribute</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>autocomplete</code> attribute lets web browsers <b>provide automated assistance</b> when people are filling in form fields.</p>
+            <aside class="notes">Who is this particularly useful for?</aside>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">
+&lt;form&gt;
+  &lt;div class="form-group"&gt;
+    &lt;label for="name"&gt;Full name&lt;/input&gt;
+    &lt;input type="text" id="name" <span class="codeHighlight">autocomplete="on"</span>&gt;
+  &lt;/div&gt;
+&lt;/form&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>This attribute <b>can be applied to</b>:</p>
+            <ul>
+              <li><code>&lt;input&gt;</code> elements that take text or numeric values.</li>
+              <li><code>&lt;textarea&gt;</code> elements.</li>
+              <li><code>&lt;select&gt;</code> elements.</li>
+              <li><code>&lt;form&gt;</code> elements.</li>
+            </ul>
+          </section>
+
+          <section data-background="#fff">
+            <p>In order to use the <code>autocomplete</code> attribute, <b>the following need to be true</b>:</p>
+          </section>
+
+          <section data-background="#fff">
+            <ul>
+              <li>The element must be inside a <code>&lt;form&gt;</code>.</li>
+              <li>The form must have a submit button.</li>
+              <li>The element must have a <code>name</code> and/or an <code>id</code>.</li>
+            </ul>
+          </section>
+
+          <section data-background="#fff">
+            <p>The autocomplete attribute can take <a href="https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-autocomplete" target="_blank">a wide range of values</a>. The most common values are:</p>
+          </section>
+
+          <section data-background="#fff">
+            <table>
+              <thead>
+                <tr>
+                  <th>Attribute</th>
+                  <th>Purpose</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>off</code></td>
+                  <td>The browser is not permitted to automatically provide a value.</td>
+                </tr>
+                <tr>
+                  <td><code>on</code></td>
+                  <td>The browser is allowed to automatically complete the input.</td>
+                </tr>
+                <tr>
+                  <td><code>name</code></td>
+                  <td>The field expects the value to be a person's full name. </td>
+                </tr>
+                <tr>
+                  <td><code>email</code></td>
+                  <td>The field expects the value to be a person's email address. </td>
+                </tr>
+                <tr>
+                  <td><code>username</code></td>
+                  <td>A username or account name.</td>
+                </tr>
+                <tr>
+                  <td><code>tel</code></td>
+                  <td>A full telephone number, including the country code.</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>Why is the <code class="white">autocomplete</code> attribute important for accessibility?</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>The autocomplete attribute helps users by reducing the amount of repetitive typing that is needed when filling in forms.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>This is especially important for people with mobility issues or who have low vision.</p>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="ex-adding-the-autocomplete-value">
+          <section data-background="#d3420d">
+            <h2>Exercise: Adding the <code class="white">autocomplete</code> value</h2>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing the exercise:</h4>
+            <p><a href="https://codepen.io/intopia/pen/dyJdraz" target="_blank">DEVELOPER EXERCISE: Adding the autocomplete value</a>.</p>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="recap">
+          <section data-background="#15828E">
+            <h2>Recap</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>Accessible forms are <b>critical for all users</b>, but especially keyboard and screen reader users.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>We need to make sure our form controls have programatically associated <b>labels, instructions and required information</b>.</p>
+          </section>
+        </section>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js"></script>
+    <script src="https://intopia.github.io/training-assets/dist/reveal.js"></script>
+    <script src="https://intopia.github.io/training-assets/plugin/notes/notes.js"></script>
+
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'none',
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [ RevealNotes ]
+      });
+    </script>
+
+  </body>
+</html>

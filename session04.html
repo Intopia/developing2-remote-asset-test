@@ -1,0 +1,1158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Session 4: Accessible form notifications | Developing for web accessibility</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://intopia.github.io/training-assets/dist/reveal.css">
+    <link rel="stylesheet" href="https://intopia.github.io/training-assets/dist/theme/intopia.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'https://intopia.github.io/training-assets/dist/theme/pdf.css' : 'https://intopia.github.io/training-assets/dist/theme/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <div class="menu">
+          <a href="index.html">Home<span class="hidden"> - list of all slide decks</span></a> | <a href="#/">Start<span class="hidden"> of slide deck</span></a>
+        </div>
+
+        <section data-background="#d3420d">
+          <h1>Session 4</h1>
+          <span class="h5">Accessible form notifications</span>
+        </section>
+
+        <section data-background="#fff">
+          <div class="instructions">
+            <h3 class="instructions-heading">Slide instructions</h3>
+            <p><kbd>SPACEBAR</kbd> to <b>move forward</b> through slides.</p>
+            <p><kbd>SHIFT</kbd> &amp; <kbd>SPACEBAR</kbd> to <b>move backwards</b> through slides.</p>
+            <p><kbd>LEFT ARROW</kbd> &amp; <kbd>RIGHT ARROW</kbd> to <b>move through sections</b>.</p>
+            <p><kbd>ESC</kbd> to <b>see overview</b> and <kbd>ESC</kbd> again to exit.</p>
+            <p><kbd>F</kbd> to <b>enter presentation mode</b> and <kbd>ESC</kbd> to exit.</p>
+          </div>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-introduction">
+          <section data-background="#15828E">
+            <h2>Introduction</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>Part of what makes forms complex for accessibility is the <b>variety of feedback we need to give our users</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>We can give <b>live updates</b> on how well they are meeting the instructions and requirements.</p>
+            <aside class="notes">i.e. character counts in textareas, password strength, etc. This allows us to prevent errors before the user submits the form.</aside>
+          </section>
+
+          <section data-background="#fff">
+            <p>When the form is submitted, we must <b>let the user know if there were any errors</b> so they can be fixed before we send the data to the server. </p>
+            <aside class="notes">We need to make sure that the info we're sending to the server is as clean as possible so it can be used there safely.</aside>
+          </section>
+
+          <section data-background="#fff">
+            <p>For accessibility we need to make sure that <b>all of this feedback is available to everyone</b>.</p>
+          </section>
+       </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-live-region-states">
+          <section data-background="#15828E">
+            <h2>Live region states and properties</h2>
+            <aside class="notes">Live regions are what we use to give in the moment feedback. We have ARIA roles and attributes which can force a screen reader to make announcements. But with great power comes great responsibility.</aside>
+          </section>
+
+          <section data-background="#fff">
+            <p>Elements that are dynamically inserted after the initial page load can <b>cause two potential problems for screen readers</b>.</p>
+            <aside class="notes">Why not just update character counts or insert search results using JavaScript? Becuase the way that screen reader software works can make it harder for it to notice these changes and inform the user.</aside>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Problem 1:</h4>
+            <p>Screen readers &ldquo;buffer&rdquo; pages as they are loaded. Any content that is added after this time many not be picked up by the screen reader.</p>
+            <aside class="notes">Some screen readers are improving on this, but there's still a long way to go. It's much easier for us to explicitly tell the software what we want it to know. </aside>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Problem 2:</h4>
+            <p>Screen readers can only focus on one part of the page at a time. If something changes on another area of the page, screen readers will not announce this change unless the user moves to that area.</p>
+            <aside class="notes">So we have to decide if we want to force them to get that update earlier. If you're not sure, have a chat with your UX or design team. Both of these problems can be solved by using an ARIA live region.</aside>
+          </section>
+
+          <section data-background="#fff">
+            <p>The live region attributes allow authors to <b>notify screen readers when content is updated</b>. The possible live region attributes are:</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">aria-live
+aria-atomic
+aria-relevant
+aria-busy (state)</code></pre>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>aria-live</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>There are <b>three possible values</b>:</p>
+            <ul>
+              <li><code>off</code></li>
+              <li><code>polite</code></li>
+              <li><code>assertive</code></li>
+            </ul>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Off</h4>
+            <p>Assistive Technologies will be aware that changes have occurred within the element. However, these changes should not be announced unless the region is currently in focus.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>off</code> value should be used for information that is not critical, <b>where changes do not need to be announced</b>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div <span class="codeHighlight">aria-live="off"</span>&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Polite</h4>
+            <p>Assistive Technologies should announce updates at the next graceful opportunity.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>polite</code> value can be used for warning notifications that users may need to know.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div <span class="codeHighlight">aria-live="polite"</span>&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Assertive</h4>
+            <p>Assistive Technologies should announce updates immediately.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>assertive</code> value should only be used if the interruption is imperative for users to know immediately.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div <span class="codeHighlight">aria-live="assertive"</span>&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>aria-atomic</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>aria-atomic</code> attribute indicates whether assistive technologies will present <b>all or only parts of the changed region</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>false</code> attribute will present <b>only the changed regions</b>. This is the default.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  aria-live="polite"
+  <span class="codeHighlight">aria-atomic="false"</span>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>true</code> attribute will present <b>the region as a whole</b> when changes are detected.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  aria-live="polite"
+  <span class="codeHighlight">aria-atomic="true"</span>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>This attribute becomes important <b>depending on the amount of content that needs to be announced</b>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  aria-live="polite"
+  <span class="codeHighlight">aria-atomic="false"</span>
+&gt;
+  There are <span class="codeHighlight">3</span> items available.
+  Use the arrow keys to navigate.
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  aria-live="polite"
+  <span class="codeHighlight">aria-atomic="true"</span>
+&gt;
+  <span class="codeHighlight">There are 3 items available.
+  Use the arrow keys to navigate.</span>
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>aria-live</code> attribute <b>should always be present</b> when using the <code>aria-atomic</code> attribute.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  <span class="codeHighlight">aria-live="[ off | polite | assertive ]"
+  aria-atomic=" [ false | true ]"</span>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>aria-relevant</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>aria-relevant</code> attribute defines <b>what sorts of changes will be presented to screen readers</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>additions</code> value informs Assistive Technologies of <b>nodes that are dynamically inserted</b> within the live region.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  aria-live="polite"
+  <span class="codeHighlight">aria-relevant="additions"</span>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>removals</code> value informs Assistive Technologies of <b>nodes that are dynamically deleted</b> within the live region.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  aria-live="polite"
+  <span class="codeHighlight">aria-relevant="removals"</span>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>text</code> value informs Assistive Technologies of <b>dynamic changes to the textual content within existing nodes</b> within the live region.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  aria-live="polite"
+  <span class="codeHighlight">aria-relevant="text"</span>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>all</code> value informs Assistive Technologies of <b>dynamic insertion or deletion of nodes</b> within the live region.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  aria-live="polite"
+  <span class="codeHighlight">aria-relevant="all"</span>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>aria-live</code> attribute <b>should always be present</b> when using the <code>aria-relevant</code> attribute.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  <span class="codeHighlight">aria-live="[ off | polite | assertive ]"
+  aria-relevant=" [ additions | removals | text | all ]"</span>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>aria-busy</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>aria-busy</code> attribute indicates <b>whether an element, and its subtree, are currently being updated</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>aria-busy</code> attribute is a state, which means that it <b>needs to be changed dynamically using JavaScript</b> to determine the current state.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>The value can be set to <code>true</code> <b>when content is being loaded</b> within the live region.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  aria-live="polite"
+  <span class="codeHighlight">aria-busy="true"</span>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>The value can be set to <code>false</code> <b>when the content loading has completed</b> within the live region.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  aria-live="polite"
+  <span class="codeHighlight">aria-busy="false"</span>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>aria-live</code> attribute <b>should always be present</b> when using the <code>aria-busy</code> attribute.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  <span class="codeHighlight">aria-live="[ off | polite | assertive ]"
+  aria-busy=" [ true | false ]"</span>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="ex-using-aria-live">
+          <section data-background="#d3420d">
+            <h2>Exercise: Using <code class="white">aria-live</code></h2>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing exercise 1:</h4>
+            <p><a href="https://codepen.io/intopia/pen/JjMpzqW" target="_blank">DEVELOPER EXERCISE:<code> aria-live="assertive"</code></a></p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing exercise 2:</h4>
+            <p><a href="https://codepen.io/intopia/pen/VwyQROr" target="_blank">DEVELOPER EXERCISE: <code>aria-live="polite"</code></a></p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing exercise 3:</h4>
+            <p><a href="https://codepen.io/intopia/pen/vYpdPwd" target="_blank">DEVELOPER EXERCISE: <code>aria-live="off"</code></a></p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Online demos:</h4>
+            <ul class="font-sm">
+              <li><a href="https://russmaxdesign.github.io/accessible-forms/live01-aria-live-assertive.html" target="_blank"><code>aria-live="assertive"</code></a></li>
+              <li><a href="https://russmaxdesign.github.io/accessible-forms/live02-aria-live-polite.html" target="_blank"><code>aria-live="polite"</code></a></li>
+              <li><a href="https://russmaxdesign.github.io/accessible-forms/live03-aria-live-off.html" target="_blank"><code>aria-live="off"</code></a></li>
+              <li><a href="https://russmaxdesign.github.io/accessible-forms/live04-role-alert.html" target="_blank"><code>role="alert"</code></a></li>
+              <li><a href="https://russmaxdesign.github.io/accessible-forms/live05-role-status.html" target="_blank"><code>role="status"</code></a></li>
+              <li><a href="https://russmaxdesign.github.io/accessible-forms/support-live-region.html" target="_blank">Support chart</a></li>
+            </ul>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-password-strength">
+          <section data-background="#15828E">
+            <h2>Password strength</h2>
+            <aside class="notes">A good example of a use case for <code>aria-live</code> is a password strength detector.</aside>
+          </section>
+
+          <section data-background="#fff">
+            <p>We want to let the user know if their password is secure enough, so we <b>present a strength meter</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/password-strength.png" alt="Password Strength indicator">
+          </section>
+
+          <section data-background="#fff">
+            <p>It should dynmically update <b>as soon as the user changes what they're typing</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>This is a <b>good opportunity</b> to an <code>assertive</code> live region.</p>
+          </section>
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="ex-creating-password-strenth-indicator">
+          <section data-background="#d3420d">
+            <h2>Exercise: Creating a password strength indicator</h2>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing the exercise:</h4>
+            <p><a href="https://codepen.io/intopia/pen/PoEQLvd" target="_blank">DEVELOPER EXERCISE: Creating a password strength indicator</a></p>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-character-count">
+          <section data-background="#15828E">
+            <h2>Character count</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>If we need a maximum or minimum number of characters in a text area, <b>we can show a character count</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/character-counter.png" alt="Character counter indicator">
+          </section>
+
+          <section data-background="#fff">
+            <p>A <code>polite</code> live region is <b>more user-friendly than an assertive one</b> in this situation.</p>
+          </section>
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="ex-creating-character-count-indicator">
+          <section data-background="#d3420d">
+            <h2>Exercise: Creating a character count indicator</h2>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing the exercise:</h4>
+            <p><a href="https://codepen.io/intopia/pen/oNpEVre" target="_blank">DEVELOPER EXERCISE: Creating a character count indicator</a></p>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-client-side-form-validation">
+          <section data-background="#15828E">
+            <h2>Client-side form validation</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>Before submitting data to the server, it is important to ensure all required form controls are filled out, in the correct format. This is called <b>client-side form validation</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>Client-side form validation <b>helps ensure data submitted matches the requirements</b> in our instructions.</p>
+            <aside class="notes">Why send the data on a round trip to the server if we already know it's not going to be what we need?</aside>
+          </section>
+
+          <section data-background="#fff">
+            <p>One key aspect of client side form validation is <b>notifying users of errors in the form</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>There are <b>two fundamental approaches</b> to error notification.</p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>on blur</h4>
+            <p>The first approach involves validating and notifying users of errors as focus leaves each individual form field, often referred to as <b>onBlur</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>As focus leaves each form field, <b>users should be notified </b>if the field is in a state of error.</p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>On submit</h4>
+            <p>The second approach involves validation and notifying users of errors as they attempt to submit the form, often referred to as <b>onSubmit</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>After the submit button is activated, <b>users should be notified</b> of all fields that are in a state of error.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>In reality, forms that use onBlur for form field validation <b>must still use onSubmit validation as well</b>. </p>
+          </section>
+
+          <section data-background="#fff">
+            <p>The reason is that users <b>may not resolve individual form field errors</b> before attempting to submit the form.</p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Why?</h4>
+            <ul class="font-sm">
+              <li>The user may have been focusing on specific fields and failed to notice the errors above.</li>
+              <li>Screen reader software may not have notified users of error messages.</li>
+              <li>Screen magnifier software may have magnified the page so that errors are no longer visible.</li>
+            </ul>
+          </section>
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-onblur-form-field-errors">
+          <section data-background="#15828E">
+            <h2>onBlur form field errors</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>If a form field is in a state of error, <b>the following should occur</b>:</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>1. Each form field that has errors should be <b>visually &ldquo;flagged&rdquo;</b> to show that they are invalid.</p>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-034.png" alt="Invalid field using colour alone">
+          </section>
+
+          <section data-background="#fff">
+            <p>2. An error message <b>should be provided in the direct vicinity</b> of the invalid form field.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>3. The error message <b>should be informative</b> - it should provide information that will help users fill in the field correctly.</p>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-036.png" alt="Informative error message">
+          </section>
+
+          <section data-background="#fff">
+            <p>4. The error message <b>must be programmatically associated</b> with the invalid form field.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>This can be done with <b>matching</b> <code>aria-describedby</code> and <code>ID</code> values.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;label for="name"&gt;Name&lt;/label&gt;
+&lt;input
+  type="text"
+  id="name"
+  <span class="codeHighlight">aria-describedby="aaa"</span>
+&gt;
+&lt;span <span class="codeHighlight">id="aaa"</span>&gt;Error message&lt;/span&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>5. The invalid form field <b>should be set with</b> <code>aria-invalid="true"</code>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>This will <b>inform assistive technologies</b> that the value entered into the input field does not conform to the format expected by the application.</p>
+          </section>
+
+           <section data-background="#222">
+<pre><code contenteditable="true">&lt;label for="name"&gt;Name&lt;/label&gt;
+&lt;input
+  type="text"
+  id="name"
+  aria-describedby="aaa"
+  <span class="codeHighlight">aria-invalid="true"</span>
+&gt;
+&lt;span id="aaa"&gt;Error message&lt;/span&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>6. The form field and error message can be <b>wrapped inside a container that is set with</b> <code>aria-live</code>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>This means that the dynamic error state <b>will be announced as users leave the field</b>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true"><span class="codeHighlight">&lt;div aria-live="polite"&gt;</span>
+  &lt;label for="name"&gt;Name&lt;/label&gt;
+  &lt;input
+    type="text"
+    id="name"
+    aria-describedby="aaa"
+    aria-invalid="true"
+  &gt;
+  &lt;span id="aaa"&gt;Error message&lt;/span&gt;
+<span class="codeHighlight">&lt;/div&gt;</span></code></pre>
+          </section>
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+            <aside class="notes">something about how noisy this can be</aside>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="ex-setting-up-form-field-error">
+          <section data-background="#d3420d">
+            <h2>Exercise: Setting up a form field error</h2>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing the exercise:</h4>
+            <p><a href="https://codepen.io/intopia/pen/mdpXoZL" target="_blank">DEVELOPER EXERCISE: Setting up a form field error</a></p>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-live-region-roles">
+          <section data-background="#15828E">
+            <h2>Live region roles</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>Live region <b>roles</b> can be used to define live regions of a document, and may be modified by live region attributes.</p>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>status</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>role="status"</code> is used for content that is <b>advisory information</b>, but is not important enough to justify an alert.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  <span class="codeHighlight">role="status"</span>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>Elements set with <code>role="status"</code> have <b>two implicit values</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>1. Implicit <code>aria-live="polite"</code></h4>
+            <p>This means assistive technologies should announce updates at the next graceful opportunity.</p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>2. Implicit <code>aria-atomic="true"</code></h4>
+            <p>This means the entire region should be announced when changes are detected.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>For this reason, these two attributes <b>do not be need to be defined</b> when using <code>role="status"</code>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  role="status"
+  <s>aria-live="polite"</s>
+  <s>aria-atomic="true"</s>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>alert</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>role="alert"</code> is used for content that is <b>important, and usually time-sensitive</b> such as error messages.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  <span class="codeHighlight">role="alert"</span>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>Elements set with <code>role="alert"</code> have <b>two implicit values</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>1. Implicit <code>aria-live="assertive"</code></h4>
+            <p>This means assistive technologies should announce updates immediately.</p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>2. Implicit <code>aria-atomic="true"</code></h4>
+            <p>This means the entire region should be announced when changes are detected.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>For this reason, these two attributes <b>do not be need to be defined</b> when using <code>role="alert"</code>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div
+  role="alert"
+  <s>aria-live="assertive"</s>
+  <s>aria-atomic="true"</s>
+&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="ex-adding-live-region-roles">
+          <section data-background="#d3420d">
+            <h2>Exercise: Adding live region roles</h2>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing exercise 1:</h4>
+            <p><a href="https://codepen.io/intopia/pen/QWaQoXR" target="_blank">DEVELOPER EXERCISE: <code>role="status"</code></a></p>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing exercise 2:</h4>
+            <p><a href="https://codepen.io/intopia/pen/xxpYeKq" target="_blank">DEVELOPER EXERCISE: <code>role="alert"</code></a></p>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-onsubmit-errors">
+          <section data-background="#15828E">
+            <h2>onSubmit errors</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>If there any errors within the form when the user attempts to submit the form, users must be notified of <b>all fields that are in an error state</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>Focus could be <b>sent to either</b>:</p>
+            <ul>
+              <li>the first form field in a state of error, or</li>
+              <li>an overall error message at the top of the form.</li>
+            </ul>
+          </section>
+
+          <section data-background="#fff">
+            <p>If an overall error message is used, <b>the following must occur</b>:</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>1. An error message must be presented to users, and it should be placed <b>above the form</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>2. Focus must <b>shift to the error message</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>3. The error message <b>should list all errors</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>4. Ideally, <b>each listed error should be a link</b> that takes the user to the relevant form error.</p>
+          </section>
+
+          <section data-background="#fff">
+            <img src="assets/img/topic03-037.png" alt="Error at top of form">
+          </section>
+
+          <section data-background="#fff">
+            <p>5. The error message should be set with <code>role="alert"</code> as this will <b>announce the error to screen reader users</b> as soon as the error is triggered.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>Even though shifting focus will already allow the error message to be announced, using <code>role="alert"</code> <b>changes the semantic nature of the element</b>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div <span class="codeHighlight">role="alert"</span>&gt;
+  &lt;h3&gt;Error alert&lt;/h3&gt;
+  &lt;p&gt;The form below contains three errors:&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Form field error 1&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Form field error 2&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Form field error 3&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>6. The error message must also be set with <code>tabindex="0"</code> so that the element <b>can receive focus</b> as soon as it is triggered. </p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div role="alert" <span class="codeHighlight">tabindex="0"</span>&gt;
+  &lt;h3&gt;Error alert&lt;/h3&gt;
+  &lt;p&gt;The form below contains three errors:&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Form field error 1&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Form field error 2&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Form field error 3&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="ex-creating-onsubmit-error-message">
+          <section data-background="#d3420d">
+            <h2>Exercise: Creating an onSubmit error message</h2>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing the exercise:</h4>
+            <p><a href="https://codepen.io/intopia/pen/KKZQYKP" target="_blank">DEVELOPER EXERCISE: Creating an on-submit error message</a></p>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-success-messages">
+          <section data-background="#15828E">
+            <h2>Success messages</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>In some cases, you may need to inform users that the form has been <b>submitted sucessfully</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>Ideally, form-based success messages should follow <b>many of the same principles</b> as form-based error messages.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>1. The success message must be presented to users.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>The success message is normally <b>positioned above the form or as a replacement for the entire form</b>. If you're unsure, check with your UX team.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>2. Focus must <b>shift to the success message</b>.</p>
+          </section>
+
+          <section data-background="#fff">
+            <p>3. The success message must be set with <code>role="status"</code> as it is <b>not an alert or error</b>.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div <span class="codeHighlight">role="status"</span>&gt;
+  &lt;h3&gt;Sucess message heading alert&lt;/h3&gt;
+  &lt;p&gt;Success message content.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>4. The success message must also be set with <code>tabindex="0"</code> <b>so that the element can receive focus</b> as soon as it is triggered.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;div role="status" <span class="codeHighlight">tabindex="0"</span>&gt;
+  &lt;h3&gt;Sucess message heading alert&lt;/h3&gt;
+  &lt;p&gt;Success message content.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+          </section>
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="ex-creating-success-message">
+          <section data-background="#d3420d">
+            <h2>Exercise: Creating a success message</h2>
+          </section>
+
+          <section data-background="#fff">
+            <h4>Accessing the exercise:</h4>
+            <p><a href="https://codepen.io/intopia/pen/MWrQRWw" target="_blank">DEVELOPER EXERCISE: Creating a success message</a></p>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-aria-no-longer-needed">
+          <section data-background="#15828E">
+            <h2>ARIA attributes that are no longer needed</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>The following aria-attributes are <b>no longer needed for native form controls</b>.</p>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>aria-disabled</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>aria-disabled</code> attribute <b>sets the disabled state on an element</b> in the accessibility tree only. </p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;button <span class="codeHighlight">aria-disabled="true"</span>&gt;&lt;/button&gt;
+&lt;button <span class="codeHighlight">aria-disabled="false"</span>&gt;&lt;/button&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>However, as the HTML <code>disabled</code> attribute is so well supported across assistive technologies, <b>there is no longer any need to use</b> the <code>aria-disabled</code> attribute.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;button <span class="codeHighlight">disabled</span>&gt;&lt;/button&gt;</code></pre>
+          </section>
+
+<!--  –––––––––––––––––––––––––
+SUB-SECTION
+––––––––––––––––––––––––––  -->
+
+          <section data-background="#222">
+            <h3>aria-required</h3>
+          </section>
+
+          <section data-background="#fff">
+            <p>The <code>aria-required</code> attribute <b>sets the required state on an element</b> in the accessibility tree only.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;input type="text" <span class="codeHighlight">aria-required="true"</span>&gt;
+&lt;input type="text" <span class="codeHighlight">aria-required="false"</span>&gt;</code></pre>
+          </section>
+
+          <section data-background="#fff">
+            <p>However, as the HTML <code>required</code> attribute is so well supported across assistive technologies, <b>there is no longer any need to use</b> the <code>aria-required</code> attribute.</p>
+          </section>
+
+          <section data-background="#222">
+<pre><code contenteditable="true">&lt;input type="text" <span class="codeHighlight">required</span>&gt;</code></pre>
+          </section>
+
+          <section data-background="#d3420d">
+            <h3>Any questions or comments?</h3>
+          </section>
+        </section>
+
+
+
+<!--  –––––––––––––––––––––––––
+******  SECTION ******
+––––––––––––––––––––––––––  -->
+
+
+
+        <section id="slide-recap">
+          <section data-background="#15828E">
+            <h2>Recap</h2>
+          </section>
+
+          <section data-background="#fff">
+            <p>When we give our form notifications their <b>correct roles and relationships</b>, it's easy for the accessibility API to adapt our messages to the user's needs. </p>
+          </section>
+
+          <section data-background="#fff">
+            <p><b>Make it clear</b> what type of information you're giving, and how it relates to the form as a whole or to a specific input.</p>
+          </section>
+        </section>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js"></script>
+    <script src="https://intopia.github.io/training-assets/dist/reveal.js"></script>
+    <script src="https://intopia.github.io/training-assets/plugin/notes/notes.js"></script>
+
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'none',
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [ RevealNotes ]
+      });
+    </script>
+
+  </body>
+</html>
